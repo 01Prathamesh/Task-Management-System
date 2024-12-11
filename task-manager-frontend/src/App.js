@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // Import Routes instead of Switch
 import './App.css';
 import Login from './components/Login';
 import Signup from './components/Signup';
@@ -7,7 +7,7 @@ import Dashboard from './components/Dashboard';
 
 function App() {
   // Check if token exists in localStorage and set it in state
-  const [token, setToken] = useState(localStorage.getItem('token')); 
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   // Whenever token changes, update localStorage
   useEffect(() => {
@@ -49,28 +49,12 @@ function App() {
         </header>
 
         <main>
-          <Switch>
-            <Route path="/login">
-              <Login setToken={setToken} />
-            </Route>
-            <Route path="/signup">
-              <Signup />
-            </Route>
-            <Route path="/dashboard">
-              {token ? (
-                <Dashboard token={token} handleLogout={handleLogout} />
-              ) : (
-                <Login setToken={setToken} />
-              )}
-            </Route>
-            <Route path="/">
-              {token ? (
-                <Dashboard token={token} handleLogout={handleLogout} />
-              ) : (
-                <Login setToken={setToken} />
-              )}
-            </Route>
-          </Switch>
+          <Routes> {/* Use Routes instead of Switch */}
+            <Route path="/login" element={<Login setToken={setToken} />} /> {/* Use element prop */}
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard" element={token ? <Dashboard token={token} handleLogout={handleLogout} /> : <Login setToken={setToken} />} />
+            <Route path="/" element={token ? <Dashboard token={token} handleLogout={handleLogout} /> : <Login setToken={setToken} />} />
+          </Routes>
         </main>
       </div>
     </Router>
